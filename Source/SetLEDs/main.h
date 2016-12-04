@@ -13,12 +13,14 @@
 
 const int maxLeds = 3;
 const char* ledNames[] = { "num", "caps", "scroll" };
+// Elements in `ledNames` is ordered the way it is because:
+// kHIDUsage_LED_NumLock    = 0x01
+// kHIDUsage_LED_CapsLock   = 0x02
+// kHIDUsage_LED_ScrollLock = 0x03
 const char* stateSymbol[] = {"-", "+" };
-typedef enum { NoChange = -1, Off, On } LedState;
+typedef enum { Off=0, On=1, Toggle, NoChange} LedState;
 
-void parseOptions(int argc, const char * argv[]);
 void explainUsage();
 void setAllKeyboards(LedState changes[]);
-CFMutableDictionaryRef getKeyboardDictionary();
 
 #endif
