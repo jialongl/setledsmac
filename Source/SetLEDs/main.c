@@ -12,54 +12,49 @@
 #include "main.h"
 
 Boolean verbose = false;
-const char *nameMatch;
+const char *nameMatch = NULL;
 
 int main(int argc, const char * argv[]) {
     if (argc == 1)
         explainUsage();
 
     LedState changes[] = { NoChange, NoChange, NoChange, NoChange };       // changes[0] not used.
-    Boolean  nextIsName = false;
 
-    for (int i = 1; i < argc; i++)                                         {
-        if (strcasecmp(argv[i], "-v") == 0)
-            verbose = true                                                 ;
-        else if (strcasecmp(argv[i], "-h") == 0)
-            explainUsage()                                                 ;
-        else if (strcasecmp(argv[i], "-k") == 0)
-            nextIsName = true                                              ;
-
-        else if (strcasecmp(argv[i], "+n") == 0)
-            changes[kHIDUsage_LED_NumLock] = On                            ;
+    for (int i = 1; i < argc; i++)                             {
+        if (strcasecmp(argv[i], "+n") == 0)
+            changes[kHIDUsage_LED_NumLock] = On                ;
         else if (strcasecmp(argv[i], "-n") == 0)
-            changes[kHIDUsage_LED_NumLock] = Off                           ;
+            changes[kHIDUsage_LED_NumLock] = Off               ;
         else if (strcasecmp(argv[i], "/n") == 0)
-            changes[kHIDUsage_LED_NumLock] = Toggle                        ;
+            changes[kHIDUsage_LED_NumLock] = Toggle            ;
 
         else if (strcasecmp(argv[i], "+c") == 0)
-            changes[kHIDUsage_LED_CapsLock] = On                           ;
+            changes[kHIDUsage_LED_CapsLock] = On               ;
         else if (strcasecmp(argv[i], "-c") == 0)
-            changes[kHIDUsage_LED_CapsLock] = Off                          ;
+            changes[kHIDUsage_LED_CapsLock] = Off              ;
         else if (strcasecmp(argv[i], "/c") == 0)
-            changes[kHIDUsage_LED_CapsLock] = Toggle                       ;
+            changes[kHIDUsage_LED_CapsLock] = Toggle           ;
 
         else if (strcasecmp(argv[i], "+s") == 0)
-            changes[kHIDUsage_LED_ScrollLock] = On                         ;
+            changes[kHIDUsage_LED_ScrollLock] = On             ;
         else if (strcasecmp(argv[i], "-s") == 0)
-            changes[kHIDUsage_LED_ScrollLock] = Off                        ;
+            changes[kHIDUsage_LED_ScrollLock] = Off            ;
         else if (strcasecmp(argv[i], "/s") == 0)
-            changes[kHIDUsage_LED_ScrollLock] = Toggle                     ;
+            changes[kHIDUsage_LED_ScrollLock] = Toggle         ;
 
-        else                                                               {
-            if (nextIsName)                                                {
-                nameMatch  = argv[i]                                       ;
-                nextIsName = false                                         ;}
-            else                                                           {
-                fprintf(stderr, "Unknown arg: %s\n", argv[i])              ;
-                explainUsage()                                             ;}}}
+        else if (strcasecmp(argv[i], "-k") == 0)
+            nameMatch = argv[++i]                              ;
+        else if (strcasecmp(argv[i], "-v") == 0)
+            verbose = true                                     ;
+        else if (strcasecmp(argv[i], "-h") == 0)
+            explainUsage()                                     ;
 
-    setAllKeyboards(changes)                                               ;
-    return 0                                                               ;}
+        else                                                   {
+            fprintf(stderr, "Unknown arg: %s\n", argv[i])      ;
+            explainUsage()                                     ;}}
+
+    setAllKeyboards(changes)                                   ;
+    return 0                                                   ;}
 
 
 void explainUsage()                                                              {
